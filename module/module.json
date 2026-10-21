@@ -1,0 +1,136 @@
+{
+  "id": "turbo",
+  "name": "Piphin Turbo",
+  "version": "0.0.0",
+  "description": "Deixa o PC mais rápido para jogos e limpa o lixo, de um jeito simples. Tudo pode ser desfeito.",
+  "main": "backend.js",
+  "ui": "web/index.html",
+  "icon": "icons/turbo.png",
+  "accent": "#3b82f6",
+  "minHub": "1.4.0",
+  "tools": [
+    {
+      "name": "pc_checkup",
+      "title": "Check-up do PC",
+      "readOnly": true,
+      "description": "Analisa o PC (só leitura): nota de saúde de 0 a 100, lixo que dá para limpar por categoria, quais ajustes de jogos estão ligados, programas que abrem com o Windows, espaço livre e memória em uso.",
+      "input": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "clean_junk",
+      "title": "Limpar o lixo",
+      "description": "Limpa arquivos inúteis (temporários, caches, restos de atualizações, relatórios de erro). A pessoa confirma numa janela antes. Nunca apaga documentos, fotos, downloads, senhas ou histórico. Sem categories, usa as recomendadas.",
+      "input": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "temp",
+                "wintemp",
+                "browsers",
+                "apps",
+                "update",
+                "errors",
+                "shaders",
+                "recycle"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "optimize_for_games",
+      "title": "Otimizar para jogos",
+      "description": "Aplica ajustes do Windows para jogos (plano de energia, Modo de Jogo, desligar a gravação em segundo plano, jogos em janela, agendamento de GPU, prioridade, mouse sem aceleração...). A pessoa confirma antes, um ponto de restauração é criado e tudo pode ser desfeito. Sem tweaks, usa os recomendados.",
+      "input": {
+        "type": "object",
+        "properties": {
+          "tweaks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "power",
+                "gamemode",
+                "gamedvr",
+                "windowed",
+                "hags",
+                "priority",
+                "mouse",
+                "visual",
+                "bgapps"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "undo_optimizations",
+      "title": "Desfazer as otimizações",
+      "description": "Volta todos os ajustes feitos pelo Piphin Turbo ao que eram antes (a pessoa confirma).",
+      "input": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_startup",
+      "title": "Ver a inicialização",
+      "readOnly": true,
+      "description": "Lista os programas que abrem junto com o Windows, se estão ligados e se vale a pena deixar.",
+      "input": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "set_startup",
+      "title": "Ligar ou desligar na inicialização",
+      "description": "Liga ou desliga um programa na inicialização do Windows (a pessoa confirma). Nada é desinstalado.",
+      "input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do programa (veja list_startup)"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "enabled"
+        ]
+      }
+    },
+    {
+      "name": "turbo_mode",
+      "title": "Modo Turbo",
+      "description": "Liga o Modo Turbo para jogar agora (alto desempenho e, se pedido, fecha programas) ou desliga (on=false). A pessoa confirma.",
+      "input": {
+        "type": "object",
+        "properties": {
+          "on": {
+            "type": "boolean"
+          },
+          "close_apps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Nomes de processos para fechar, ex.: chrome, Discord"
+          }
+        }
+      }
+    }
+  ]
+}

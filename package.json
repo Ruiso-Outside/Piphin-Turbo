@@ -1,0 +1,13 @@
+{
+  "name": "piphin-turbo",
+  "productName": "Piphin Turbo",
+  "version": "1.0.0",
+  "description": "Piphin Turbo: otimização do PC para jogos e limpeza de lixo, módulo do Piphin Hub",
+  "author": "Piphin Studio",
+  "private": true,
+  "scripts": {
+    "icons": "node scripts/make-icons.js",
+    "icon": "node scripts/run-electron.js scripts/make-icon.js",
+    "module": "node scripts/make-module.js"
+  }
+}
