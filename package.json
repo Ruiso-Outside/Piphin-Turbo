@@ -1,7 +1,7 @@
 {
   "name": "piphin-turbo",
   "productName": "Piphin Turbo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Piphin Turbo: otimização do PC para jogos e limpeza de lixo, módulo do Piphin Hub",
   "author": "Piphin Studio",
   "private": true,

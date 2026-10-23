@@ -45,7 +45,7 @@ exports.activate = (ctx) => {
     if (junkDefault > 1e8) findings.push({ id: "junk", level: junkDefault > 1e9 ? "alto" : "médio", title: `${fmtBytes(junkDefault)} de lixo para limpar`, text: "Arquivos temporários, caches e restos de atualizações ocupando espaço.", action: "clean" });
     const missing = tweaks.TWEAKS.filter((t) => t.recommended && !(st[t.id] || {}).on);
     for (const t of missing) score -= t.id === "power" ? 10 : t.impact === "alto" ? 8 : t.impact === "médio" ? 5 : 2;
-    if (missing.length) findings.push({ id: "tweaks", level: missing.some((t) => t.impact !== "baixo") ? "alto" : "médio", title: `${missing.length} ${missing.length === 1 ? "ajuste para jogos desligado" : "ajustes para jogos desligados"}`, text: missing.map((t) => t.name).join(", "), action: "optimize" });
+    if (missing.length) findings.push({ id: "tweaks", level: missing.some((t) => t.impact !== "baixo") ? "alto" : "médio", title: missing.length === 1 ? "1 ajuste para jogos desligado" : `${missing.length} ajustes para jogos desligados`, text: missing.map((t) => t.name).join(", "), action: "optimize" });
     const heavy = su.filter((s) => s.enabled && s.keep === false);
     const enabled = su.filter((s) => s.enabled).length;
     if (enabled > 8) score -= 10; else if (enabled > 5) score -= 5;
