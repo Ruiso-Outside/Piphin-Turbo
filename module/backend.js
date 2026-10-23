@@ -59,7 +59,8 @@ exports.activate = (ctx) => {
     score = Math.max(5, Math.min(100, Math.round(score)));
     return { score, findings, junk: j, tweaks: st, startup: { total: su.length, enabled, heavy: heavy.length }, disk, ram: { total: os.totalmem(), used: os.totalmem() - os.freemem() }, at: new Date().toISOString() };
   }
-  const fmtBytes = (b) => (b >= 1e9 ? (b / 1e9).toFixed(1).replace(".", ",") + " GB" : b >= 1e6 ? Math.round(b / 1e6) + " MB" : Math.round(b / 1e3) + " KB");
+  // número no idioma escolhido no Hub (3,5 GB em português, 3.5 GB em inglês); Hub antigo: português
+  const fmtBytes = (b) => (b >= 1e9 ? (b / 1e9).toLocaleString(ctx.lang || "pt", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " GB" : b >= 1e6 ? Math.round(b / 1e6) + " MB" : Math.round(b / 1e3) + " KB");
 
   // ---------------------------------------------------------------- limpeza + otimizações (um pedido de administrador só)
   // ordem: 1) ponto de restauração e tudo o que precisa de administrador, de uma vez (um UAC);
