@@ -102,4 +102,4 @@ async function closeApp(name, force = false) {
   return r.code === 0;
 }
 
-module.exports = { list, setEnabled, processes, closeApp, PROTECT };
+module.exports = { list, setEnabled, processes, closeApp, PROTECT, friendly };

@@ -11,11 +11,23 @@ const S = { tab: "home", info: null, check: null, junk: null, tstate: null, star
 // ---------------------------------------------------------------- avisos e diálogos
 function toast(text, kind = "") {
   const el = document.createElement("div");
-  el.className = "toast " + kind; el.textContent = text;
+  el.className = "toast " + kind; el.textContent = lx(text);
   $("#toasts").appendChild(el); setTimeout(() => el.remove(), 4000);
 }
+// Linux (só em português): troca as frases do Windows pelas do Linux antes de mostrar
+const LINUX = /Linux/.test(navigator.userAgent);
+const LX_TEXT = [
+  ['id="oRp" checked', 'id="oRp"'],
+  ["Criar um ponto de restauração do Windows antes (recomendado)", "Criar um ponto de restauração antes (no Linux, use o Timeshift)"],
+  ["O Windows vai pedir permissão de administrador uma vez.", "O sistema vai pedir a sua senha uma vez."],
+  ["Ajustes do próprio Windows, explicados.", "Ajustes do próprio Linux, explicados."],
+  ["quando o Windows liga", "quando você entra no Linux"],
+  ["livres no disco do Windows", "livres no disco"],
+  [/\bcom o Windows\b/g, "com o sistema"], [/\bdo Windows\b/g, "do sistema"], [/\bO Windows\b/g, "O sistema"], [/\bo Windows\b/g, "o sistema"],
+];
+const lx = (html) => (LINUX ? LX_TEXT.reduce((s, [a, b]) => s.split ? (typeof a === "string" ? s.split(a).join(b) : s.replace(a, b)) : s, String(html)) : html);
 const modal = $("#modal"), box = $("#modalBox");
-const openModal = (html, cls = "") => { box.className = "modal-box " + cls; box.innerHTML = html; modal.hidden = false; };
+const openModal = (html, cls = "") => { box.className = "modal-box " + cls; box.innerHTML = lx(html); modal.hidden = false; };
 const closeModal = () => { modal.hidden = true; box.innerHTML = ""; };
 modal.addEventListener("mousedown", (e) => { if (e.target === modal) closeModal(); });
 const confirmBox = (title, text, yes = "Continuar", danger = false) => new Promise((resolve) => {
@@ -46,7 +58,7 @@ async function load() { S.info = await call("info"); render(); loadTab(); }
 function render() {
   $("#turboPill").hidden = !(S.info && S.info.turbo && S.info.turbo.on);
   const v = { home, clean, games, startup, procs, history }[S.tab];
-  $("#content").innerHTML = `<div class="wrap">${v ? v() : ""}</div>`;
+  $("#content").innerHTML = lx(`<div class="wrap">${v ? v() : ""}</div>`);
 }
 const loading = (t) => `<div class="card row"><span class="spin"></span><span class="muted">${esc(t)}</span></div>`;
 

@@ -13,14 +13,17 @@ fs.mkdirSync(path.join(stage, "icons"), { recursive: true });
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "module", "module.json"), "utf8"));
 manifest.version = pkg.version;
 fs.writeFileSync(path.join(stage, "module.json"), JSON.stringify(manifest, null, 2));
-for (const f of fs.readdirSync(path.join(root, "module"))) if (f.endsWith(".js")) fs.copyFileSync(path.join(root, "module", f), path.join(stage, f));
+for (const f of fs.readdirSync(path.join(root, "module"))) if (/\.(js|py)$/.test(f)) fs.copyFileSync(path.join(root, "module", f), path.join(stage, f));
 fs.cpSync(path.join(root, "web"), path.join(stage, "web"), { recursive: true });
 // traduções (o Hub aplica na tela e nos avisos); source.jsonl e config.json ficam de fora
 fs.cpSync(path.join(root, "i18n"), path.join(stage, "i18n"), { recursive: true, filter: (src) => !/\.jsonl$|config\.json$/.test(src) });
 fs.copyFileSync(path.join(root, "icons", "turbo.png"), path.join(stage, "icons", "turbo.png"));
 
 fs.rmSync(out, { force: true });
-const tar = path.join(process.env.SystemRoot || "C:\Windows", "System32", "tar.exe");
-execFileSync(tar, ["-a", "-c", "-f", out, "-C", stage, "."], { stdio: "inherit" });
+// tar do Windows (System32); no Linux, o tar do sistema
+const tar = process.platform === "win32" ? path.join(process.env.SystemRoot || "C:\\Windows", "System32", "tar.exe") : "tar";
+// .zip: o tar do Windows cria pela extensão; no Linux, pelo Python (vem em toda distribuição)
+if (process.platform === "win32") execFileSync(tar, ["-a", "-c", "-f", out, "-C", stage, "."], { stdio: "inherit" });
+else execFileSync("python3", ["-c", "import os,sys,zipfile\nr,o=sys.argv[1],sys.argv[2]\nwith zipfile.ZipFile(o,'w',zipfile.ZIP_DEFLATED) as z:\n for d,_,fs in os.walk(r):\n  for f in fs:\n   p=os.path.join(d,f);z.write(p,os.path.relpath(p,r))", stage, out], { stdio: "inherit" });
 fs.rmSync(stage, { recursive: true, force: true });
 console.log("módulo:", out, `(${(fs.statSync(out).size / 1024).toFixed(0)} KB)`);

@@ -5,10 +5,13 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const sys = require("./sys");
-const junk = require("./junk");
-const tweaks = require("./tweaks");
-const startup = require("./startup");
-const admin = require("./admin");
+// Linux: as mesmas peças com o que existe no Linux (linux.js); a tela é a mesma
+const IS_WIN = process.platform === "win32";
+const LX = IS_WIN ? null : require("./linux");
+const junk = LX ? LX.junk : require("./junk");
+const tweaks = LX ? LX.tweaks : require("./tweaks");
+const startup = LX ? LX.startup : require("./startup");
+const admin = LX ? LX.admin : require("./admin");
 
 exports.activate = (ctx) => {
   const BACKUP = path.join(ctx.dataDir, "backups.json"), HISTORY = path.join(ctx.dataDir, "historico.json"), PREFS = path.join(ctx.dataDir, "prefs.json");
@@ -27,6 +30,7 @@ exports.activate = (ctx) => {
   // ---------------------------------------------------------------- check-up
   let lastJunk = null;
   function diskInfo() {
+    if (LX) return LX.diskInfo();
     try { const s = fs.statfsSync((process.env.SystemDrive || "C:") + "\\"); return { total: s.blocks * s.bsize, free: s.bavail * s.bsize }; } catch { return null; }
   }
   async function checkup(progress = () => {}) {
@@ -115,7 +119,7 @@ exports.activate = (ctx) => {
       if (!backups[id]) continue;
       const r = await tweaks.revert(backups[id]);
       adminActions.push(...r.adminActions);
-      if (id === "mouse") { const v = await sys.regGet("HKCU\\Control Panel\\Mouse", "MouseSpeed"); await tweaksMouse(v && v.value !== "0"); }
+      if (id === "mouse" && !LX) { const v = await sys.regGet("HKCU\\Control Panel\\Mouse", "MouseSpeed"); await tweaksMouse(v && v.value !== "0"); }
       done.push(id);
     }
     let declined = false;
@@ -130,6 +134,15 @@ exports.activate = (ctx) => {
   // ---------------------------------------------------------------- modo turbo (na hora de jogar)
   let turbo = readJson(path.join(ctx.dataDir, "turbo.json"), null);
   async function turboOn(apps = []) {
+    if (LX) { // Linux: perfil de energia de desempenho e fecha os programas escolhidos
+      const prev = await LX.turbo.on();
+      const closed = [];
+      for (const a of apps) { try { if (await startup.closeApp(a)) closed.push(a); } catch { /* protegido */ } }
+      turbo = { on: true, since: Date.now(), prevScheme: turbo && turbo.on ? turbo.prevScheme : prev, closed };
+      writeJson(path.join(ctx.dataDir, "turbo.json"), turbo);
+      log("turbo", `Modo Turbo ligado${closed.length ? ` (fechados: ${closed.join(", ")})` : ""}`);
+      return turbo;
+    }
     const cur = await tweaks.activeScheme();
     let target = (await tweaks.schemes()).find((s) => s.guid === tweaks.HIGH) || (await tweaks.schemes()).find(tweaks.isPerfScheme);
     if (!target) { const r = await sys.run(sys.exe("powercfg.exe"), ["-duplicatescheme", tweaks.HIGH]); const m = /([0-9a-f]{8}-[0-9a-f-]{27})/i.exec(r.out); if (m) target = { guid: m[1].toLowerCase() }; }
@@ -143,7 +156,10 @@ exports.activate = (ctx) => {
     return turbo;
   }
   async function turboOff() {
-    if (turbo && turbo.prevScheme && !backups.power) await sys.run(sys.exe("powercfg.exe"), ["/setactive", turbo.prevScheme]);
+    if (turbo && turbo.prevScheme && !backups.power) {
+      if (LX) await LX.turbo.off(turbo.prevScheme);
+      else await sys.run(sys.exe("powercfg.exe"), ["/setactive", turbo.prevScheme]);
+    }
     turbo = { on: false };
     writeJson(path.join(ctx.dataDir, "turbo.json"), turbo);
     log("turbo", "Modo Turbo desligado (plano de energia de volta ao anterior)");
@@ -178,7 +194,7 @@ exports.activate = (ctx) => {
     log("restauração", "Ponto de restauração criado");
     return true;
   }));
-  ctx.handle("open-restore", () => sys.run(sys.exe("rstrui.exe"), []).then(() => true));
+  ctx.handle("open-restore", () => (LX ? Promise.reject(new Error("No Linux, os pontos de restauração ficam no Timeshift (sudo apt install timeshift)")) : sys.run(sys.exe("rstrui.exe"), []).then(() => true)));
   ctx.handle("prefs", (patch) => { let p = readJson(PREFS, {}); if (patch) { p = { ...p, ...patch }; writeJson(PREFS, p); } return p; });
 
   // ---------------------------------------------------------------- ferramentas para a IA (sempre com confirmação)
