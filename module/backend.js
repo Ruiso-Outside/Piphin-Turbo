@@ -198,7 +198,7 @@ exports.activate = (ctx) => {
   ctx.handle("prefs", (patch) => { let p = readJson(PREFS, {}); if (patch) { p = { ...p, ...patch }; writeJson(PREFS, p); } return p; });
 
   // ---------------------------------------------------------------- ferramentas para a IA (sempre com confirmação)
-  const ask = async (message, detail, yes) => (await ctx.host.messageBox({ type: "question", title: "Piphin Turbo", message, detail, buttons: [yes, "Cancelar"], defaultId: 0, cancelId: 1 })) === 0;
+  const ask = async (message, detail, yes) => (await ctx.host.messageBox({ type: "question", title: "Arasaka Overclock", message, detail, buttons: [yes, "Cancelar"], defaultId: 0, cancelId: 1 })) === 0;
   ctx.handle("tool:pc_checkup", async () => {
     const c = await exclusive("check-up", () => checkup());
     ctx.emit("checkup", c);
@@ -222,14 +222,14 @@ exports.activate = (ctx) => {
     const st = await tweaks.state(), todo = ids.filter((id) => !(st[id] || {}).on);
     if (!todo.length) return { ok: true, note: "Tudo já estava otimizado" };
     const names = todo.map((id) => "• " + tweaks.TWEAKS.find((t) => t.id === id).name).join("\n");
-    if (!(await ask("A IA quer otimizar o PC para jogos", `${names}\n\nTudo pode ser desfeito depois no Piphin Turbo. Um ponto de restauração do Windows será criado antes.`, "Otimizar"))) throw new Error("A pessoa não autorizou as otimizações");
+    if (!(await ask("A IA quer otimizar o PC para jogos", `${names}\n\nTudo pode ser desfeito depois no Arasaka Overclock. Um ponto de restauração do Windows será criado antes.`, "Otimizar"))) throw new Error("A pessoa não autorizou as otimizações");
     const r = await exclusive("otimização", () => applyTweaks(todo, { restorePoint: true }));
     ctx.emit("refresh");
     return { applied: r.done, failed: r.failed, needs_reboot: r.reboot };
   });
   ctx.handle("tool:undo_optimizations", async () => {
     if (!Object.keys(backups).length) return { note: "Nada para desfazer" };
-    if (!(await ask("A IA quer desfazer as otimizações do Piphin Turbo", "Os ajustes voltam a ser como eram antes.", "Desfazer"))) throw new Error("A pessoa não autorizou");
+    if (!(await ask("A IA quer desfazer as otimizações do Arasaka Overclock", "Os ajustes voltam a ser como eram antes.", "Desfazer"))) throw new Error("A pessoa não autorizou");
     const r = await exclusive("desfazer", () => revertTweaks());
     ctx.emit("refresh");
     return { reverted: r.done };

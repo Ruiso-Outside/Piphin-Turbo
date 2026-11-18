@@ -26,7 +26,7 @@ const KNOWN = [
   [/nvidia|nvbackend|nvcontainer/i, "NVIDIA", "Serviços da placa de vídeo NVIDIA. Melhor deixar ligado.", true],
   [/amd|radeon/i, "AMD", "Serviços da AMD. Melhor deixar ligado.", true],
   [/logi|razer|corsair|steelseries|hyperx/i, "Periférico gamer", "Software do mouse/teclado/headset (luzes e macros). Deixe ligado se usa os recursos.", true],
-  [/piphin/i, "Piphin", "Programas da Piphin.", true],
+  [/piphin|arasaka/i, "Arasaka", "Programas da Arasaka Central.", true],
   [/roblox/i, "Roblox", "Abre o Roblox escondido junto com o Windows. Pode desligar.", false],
   [/whatsapp|telegram/i, "Mensagens", "App de mensagens. Desligue se não precisa dele aberto o tempo todo.", false],
   [/googledrive|google drive/i, "Google Drive", "Sincroniza arquivos com o Google Drive.", true],

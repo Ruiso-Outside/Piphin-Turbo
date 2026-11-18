@@ -1,12 +1,12 @@
 {
   "id": "turbo",
-  "name": "Piphin Turbo",
+  "name": "Arasaka Overclock",
   "version": "0.0.0",
   "description": "Deixa o PC mais rápido para jogos e limpa o lixo, de um jeito simples. Tudo pode ser desfeito.",
   "main": "backend.js",
   "ui": "web/index.html",
   "icon": "icons/turbo.png",
-  "accent": "#3b82f6",
+  "accent": "#ff0000",
   "minHub": "1.4.0",
   "tools": [
     {
@@ -75,7 +75,7 @@
     {
       "name": "undo_optimizations",
       "title": "Desfazer as otimizações",
-      "description": "Volta todos os ajustes feitos pelo Piphin Turbo ao que eram antes (a pessoa confirma).",
+      "description": "Volta todos os ajustes feitos pelo Arasaka Overclock ao que eram antes (a pessoa confirma).",
       "input": {
         "type": "object",
         "properties": {}

@@ -65,7 +65,7 @@ const loading = (t) => `<div class="card row"><span class="spin"></span><span cl
 // ---------------------------------------------------------------- início
 function verdict(s) {
   if (s >= 85) return ["Seu PC está ótimo", "Está tudo em ordem para jogar. Dá para dar um toque final com os ajustes abaixo.", "#22c55e"];
-  if (s >= 65) return ["Seu PC está bem", "Algumas coisas simples podem deixar o PC mais rápido e liberar espaço.", "#3b82f6"];
+  if (s >= 65) return ["Seu PC está bem", "Algumas coisas simples podem deixar o PC mais rápido e liberar espaço.", "#ff0000"];
   if (s >= 45) return ["Dá para melhorar bastante", "Encontramos lixo e ajustes de jogo desligados. Um clique resolve quase tudo.", "#fb923c"];
   return ["Seu PC precisa de uma faxina", "Muito lixo e ajustes importantes desligados. Clique em Otimizar tudo.", "#f87171"];
 }
@@ -124,7 +124,7 @@ function showResult(r) {
   openModal(`<h3>${r.declined ? "Feito em parte" : "Pronto!"}</h3>
     ${r.bytes ? `<div class="result" style="margin-top:10px"><i class="i i-sparkles"></i><div><b>${gb(r.bytes)}</b><div class="faint">liberados (${r.files.toLocaleString("pt-BR")} arquivos)</div></div></div>` : ""}
     ${r.done && r.done.length ? `<p style="margin-top:12px"><b>Ativado:</b> ${esc(names(r.done).join(", "))}</p>` : ""}
-    ${r.restorePoint === "criado" ? `<p class="faint">Ponto de restauração do Windows criado.</p>` : r.restorePoint ? `<div class="warnbox"><i class="i i-triangle-alert"></i>Não deu para criar o ponto de restauração (${esc(r.restorePoint)}). As mudanças ainda podem ser desfeitas pelo Piphin Turbo.</div>` : ""}
+    ${r.restorePoint === "criado" ? `<p class="faint">Ponto de restauração do Windows criado.</p>` : r.restorePoint ? `<div class="warnbox"><i class="i i-triangle-alert"></i>Não deu para criar o ponto de restauração (${esc(r.restorePoint)}). As mudanças ainda podem ser desfeitas pelo Arasaka Overclock.</div>` : ""}
     ${r.declined ? `<div class="warnbox" style="margin-top:8px"><i class="i i-triangle-alert"></i>A permissão de administrador foi recusada: a limpeza do Windows e os ajustes avançados ficaram de fora.</div>` : ""}
     ${r.reboot ? `<div class="warnbox" style="margin-top:8px"><i class="i i-rotate-ccw"></i>Reinicie o PC para o agendamento de GPU começar a valer.</div>` : ""}
     <div class="modal-actions"><button class="btn primary" data-n>Fechar</button></div>`);
@@ -208,7 +208,7 @@ function procs() {
 // ---------------------------------------------------------------- histórico
 function history() {
   const h = (S.info && S.info.history) || [];
-  return `<div><h1 class="t">Histórico</h1><p class="sub">Tudo o que o Piphin Turbo fez neste PC. As otimizações podem ser desfeitas na aba Jogos.</p></div>
+  return `<div><h1 class="t">Histórico</h1><p class="sub">Tudo o que o Arasaka Overclock fez neste PC. As otimizações podem ser desfeitas na aba Jogos.</p></div>
     <div class="card" style="padding:4px 0">${h.map((e) => `<div class="hist"><span>${new Date(e.at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}</span><div>${esc(e.text)}</div></div>`).join("") || `<p class="faint" style="padding:14px">Nada feito ainda.</p>`}</div>`;
 }
 
@@ -234,7 +234,7 @@ document.addEventListener("click", guard(async (e) => {
       return render();
     }
     if (a === "tw-rec") { const ids = S.info.tweaks.filter((t) => t.recommended && !(S.tstate[t.id] || {}).on).map((t) => t.id); return applyTweaks(ids); }
-    if (a === "undo-all") { if (!(await confirmBox("Desfazer tudo?", "Todas as otimizações feitas pelo Piphin Turbo voltam a ser como eram antes.", "Desfazer tudo"))) return; await call("tweaks-revert", []); return afterTweaks("Tudo desfeito"); }
+    if (a === "undo-all") { if (!(await confirmBox("Desfazer tudo?", "Todas as otimizações feitas pelo Arasaka Overclock voltam a ser como eram antes.", "Desfazer tudo"))) return; await call("tweaks-revert", []); return afterTweaks("Tudo desfeito"); }
     if (a === "rp") { await call("restore-point"); return toast("Ponto de restauração criado", "ok"); }
     if (a === "rp-open") return call("open-restore");
     if (a === "procs-refresh") { S.procs = await call("procs"); return render(); }
