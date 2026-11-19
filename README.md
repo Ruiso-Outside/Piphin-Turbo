@@ -1,6 +1,8 @@
-# Piphin Turbo
+# Arasaka Overclock
 
-Deixa o PC mais rápido para jogos e limpa o lixo, de um jeito simples. Módulo do [Piphin Hub](https://github.com/Ruiso-Outside/Piphin-Hub) (cerca de 120 KB).
+> Antes chamado **Piphin Turbo**. Os arquivos, pastas e dados continuam com o nome antigo.
+
+Deixa o PC mais rápido para jogos e limpa o lixo, de um jeito simples. Módulo do [Arasaka Central](https://github.com/Ruiso-Outside/ArasakaCentral) (cerca de 120 KB).
 
 **Princípios**: nada muda sem um clique; tudo é explicado em linguagem simples; toda otimização pode ser desfeita; um ponto de restauração do Windows é criado antes das mudanças de sistema; pedidos da IA sempre passam por uma confirmação na tela.
 
@@ -11,7 +13,7 @@ Deixa o PC mais rápido para jogos e limpa o lixo, de um jeito simples. Módulo 
 - **Programas abertos** por uso de memória, com fechar educado (como clicar no X)
 - **Modo Turbo** para a hora de jogar: alto desempenho + fechar programas escolhidos; desliga com um clique
 - **Histórico** de tudo o que foi feito
-- **IA**: com o Piphin LLM, a IA faz o check-up e, com a confirmação da pessoa, limpa, otimiza, desfaz, mexe na inicialização e liga o Modo Turbo
+- **IA**: com o Arasaka Mikoshi, a IA faz o check-up e, com a confirmação da pessoa, limpa, otimiza, desfaz, mexe na inicialização e liga o Modo Turbo
 
 ## Estrutura
 
