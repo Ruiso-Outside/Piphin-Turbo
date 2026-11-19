@@ -19,7 +19,7 @@ const CONF = process.env.XDG_CONFIG_HOME || path.join(HOME, ".config");
 const DATA = process.env.XDG_DATA_HOME || path.join(HOME, ".local", "share");
 
 function run(file, args, { timeout = 60000 } = {}) {
-  return new Promise((resolve) => execFile(file, args, { timeout, maxBuffer: 16 * 1024 * 1024, env: { ...process.env, LC_ALL: "C" } }, (err, out, e) =>
+  return new Promise((resolve) => execFile(file, args, { timeout, maxBuffer: 16 * 1024 * 1024, env: { ...process.env, LC_ALL: "C.UTF-8" } }, (err, out, e) =>
     resolve({ code: err ? (typeof err.code === "number" ? err.code : 1) : 0, out: String(out || ""), err: String(e || "") })));
 }
 const has = (cmd) => process.env.PATH.split(":").some((d) => sys.exists(path.join(d, cmd)));
